@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: dim_station
+    description: "Dimension table containing one current row per Austin bikeshare station."
+    columns:
+      - name: station_id
+        description: "Unique station identifier."
+        tests:
+          - unique
+          - not_null
+
+      - name: station_name
+        description: "Name of the bikeshare station."
+
+      - name: status
+        description: "Operational status of the station."
+
+  - name: fact_trips
+    description: "Fact table containing one row per Austin bikeshare trip."
+    columns:
+      - name: trip_id
+        description: "Unique trip identifier."
+        tests:
+          - unique
+          - not_null
+
+      - name: start_station_id
+        description: "Foreign key to dim_station for the trip starting station."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_station')
+                field: station_id
+
+      - name: end_station_id
+        description: "Foreign key to dim_station for the trip ending station."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_station')
+                field: station_id
+
+      - name: duration_minutes
+        description: "Duration of the trip in minutes."
+        tests:
+          - not_null
